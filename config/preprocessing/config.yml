@@ -1,0 +1,29 @@
+name: preprocessing
+description: Data Preprocessing Steps
+pipeline:
+  - name: DropColumns
+    kwargs:
+      columns:
+        - IsBefore3PlusDayOff
+        - IsBizDate
+        - IsCalendarYearEndMonth
+        - IsCalendarYearStartMonth
+        - IsDay_27_NextBizOrOrg
+        - IsDay_28_NextBizOrOrg
+        - IsDay_6812m9d_NextBizOrOrg
+        - IsDay_Bonus_PrevBizOrOrg
+        - IsDay_Pension_PrevBizOrOrg
+        - IsFirstBizDate
+        - IsFiscalHalfYearEndMonth
+        - IsFiscalHalfYearStartMonth
+        - IsFiscalYearEndMonth
+        - IsFiscalYearStartMonth
+        - IsGotoDay_Biz
+        - IsGotoDay_NextBiz
+        - IsGotoDay_PrevBiz
+        - IsHoliday
+        - IsLastBizDate
+        - IsQuaterEndMonth
+        - strWeekday_Kanji
+        - intShortYear
+  - name: ConvertBooleanToInt
