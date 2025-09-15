@@ -1,0 +1,9 @@
+name: sliding_window_cv_5folds_3mo_val_3mo_gap_3mo_step
+description: "Time series cross-validation with sliding window approach."
+strategy: "sliding_window"
+n_splits: 5
+start_date: "2022-04-01"
+end_date: "2025-03-31"
+gap_duration: "3mo"
+validation_duration: "3mo"
+step_duration: "3mo"
