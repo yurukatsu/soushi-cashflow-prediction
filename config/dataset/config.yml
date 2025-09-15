@@ -1,0 +1,301 @@
+name: dataset_all_accounts
+description: Dataset for predicting cash flow of 32 accounts
+
+filepath:
+  training: data/raw/train.csv
+  test: data/raw/test.csv
+
+column_name:
+  target: Flow
+  date: dtBaseDate
+  account_id: AccountCode
+  account_name: AccountName
+
+data_schema:
+  AccountCode: String
+  AccountName: String
+  AccumulationPeriodMonth: Date
+  Bonu-06: Float64
+  Bonu-12: Float64
+  DateType01: String
+  Day_From05_NextBizOrOrg: Int64
+  Day_From05_PrevBizOrOrg: Int64
+  Day_From10_NextBizOrOrg: Int64
+  Day_From10_PrevBizOrOrg: Int64
+  Day_From15_NextBizOrOrg: Int64
+  Day_From15_PrevBizOrOrg: Int64
+  Day_From20_NextBizOrOrg: Int64
+  Day_From20_PrevBizOrOrg: Int64
+  Day_From25_NextBizOrOrg: Int64
+  Day_From25_PrevBizOrOrg: Int64
+  Day_From27_NextBizOrOrg: Int64
+  Day_From28_NextBizOrOrg: Int64
+  Day_From6812m9d_NextBizOrOrg: Int64
+  Day_FromBonus_PrevBizOrOrg: Int64
+  Day_FromFirstShort_Biz: Int64
+  Day_FromFirst_Biz: Int64
+  Day_FromLastShort_Biz: Float64
+  Day_FromLast_Biz: Int64
+  Day_FromPension_PrevBizOrOrg: Int64
+  Day_From保険: Int64
+  Day_From利払い: Int64
+  Day_From国債大量償還: Int64
+  Day_From年金定時払い: Int64
+  Day_From普通交付税の交付: Int64
+  Day_From法人税: Int64
+  Day_From消費税: Int64
+  Day_From源泉税: Int64
+  Day_GotoFL_NextBizOrOrg: Int64
+  Day_GotoFL_PrevBizOrOrg: Int64
+  FYear: String
+  First-03: Float64
+  First-06: Float64
+  First-09: Float64
+  First-12: Float64
+  First-15: Float64
+  FirstSh-03: Float64
+  FirstSh-06: Float64
+  FirstSh-09: Float64
+  FirstSh-12: Float64
+  FirstSh-15: Float64
+  Flow: Float64
+  IsBefore3PlusDayOff: String # ['真', '偽']. Need to remove this column because it is redundant with str_IsBefore3PlusDayOff
+  IsBizDate: String # ['真', '偽']. Need to remove this column because it is redundant with str_IsBizDate
+  IsCalendarYearEndMonth: String # ['真', '偽']. Need to remove this column because it is redundant with str_IsCalendarYearEndMonth
+  IsCalendarYearStartMonth: String # ['真', '偽']. Need to remove this column because it is redundant with str_IsCalendarYearStartMonth
+  IsDay_27_NextBizOrOrg: String # ['真', '偽']. Need to remove this column because it is redundant with str_IsDay_27_NextBizOrOrg
+  IsDay_28_NextBizOrOrg: String # ['真', '偽']. Need to remove this column because it is redundant with str_IsDay_28_NextBizOrOrg
+  IsDay_6812m9d_NextBizOrOrg: String # ['真', '偽']. Need to remove this column because it is redundant with str_IsDay_6812m9d_NextBizOrOrg
+  IsDay_Bonus_PrevBizOrOrg: String # ['真', '偽']. Need to remove this column because it is redundant with str_IsDay_Bonus_PrevBizOrOrg
+  IsDay_Pension_PrevBizOrOrg: String # ['真', '偽']. Need to remove this column because it is redundant with str_IsDay_Pension_PrevBizOrOrg
+  IsFirstBizDate: String # ['真', '偽']. Need to remove this column because it is redundant with str_IsFirstBizDate
+  IsFiscalHalfYearEndMonth: String # ['真', '偽']. Need to remove this column because it is redundant with str_IsFiscalHalfYearEndMonth
+  IsFiscalHalfYearStartMonth: String # ['真', '偽']. Need to remove this column because it is redundant with str_IsFiscalHalfYearStartMonth
+  IsFiscalYearEndMonth: String # ['真', '偽']. Need to remove this column because it is redundant with str_IsFiscalYearEndMonth
+  IsFiscalYearStartMonth: String # ['真', '偽']. Need to remove this column because it is redundant with str_IsFiscalYearStartMonth
+  IsGotoDay_Biz: String # ['真', '偽']. Need to remove this column because it is redundant with str_IsGotoDay_Biz
+  IsGotoDay_NextBiz: String # ['真', '偽']. Need to remove this column because it is redundant with str_IsGotoDay_NextBiz
+  IsGotoDay_PrevBiz: String # ['真', '偽']. Need to remove this column because it is redundant with str_IsGotoDay_PrevBiz
+  IsHoliday: String # ['真', '偽']. Need to remove this column because it is redundant with str_IsHoliday
+  IsLastBizDate: String # ['真', '偽']. Need to remove this column because it is redundant with str_IsLastBizDate
+  IsQuaterEndMonth: String # ['真', '偽']. Need to remove this column because it is redundant with str_IsQuaterEndMonth
+  JAD8-06: Float64
+  JAD8-12: Float64
+  Last-03: Float64
+  Last-06: Float64
+  Last-09: Float64
+  Last-12: Float64
+  Last-15: Float64
+  LastSh-03: Float64
+  LastSh-06: Float64
+  LastSh-09: Float64
+  LastSh-12: Float64
+  LastSh-15: Float64
+  NOrg05-03: Float64
+  NOrg05-06: Float64
+  NOrg05-09: Float64
+  NOrg05-12: Float64
+  NOrg05-15: Float64
+  NOrg10-03: Float64
+  NOrg10-06: Float64
+  NOrg10-09: Float64
+  NOrg10-12: Float64
+  NOrg10-15: Float64
+  NOrg15-03: Float64
+  NOrg15-06: Float64
+  NOrg15-09: Float64
+  NOrg15-12: Float64
+  NOrg15-15: Float64
+  NOrg20-03: Float64
+  NOrg20-06: Float64
+  NOrg20-09: Float64
+  NOrg20-12: Float64
+  NOrg20-15: Float64
+  NOrg25-03: Float64
+  NOrg25-06: Float64
+  NOrg25-09: Float64
+  NOrg25-12: Float64
+  NOrg25-15: Float64
+  Next-03: Float64
+  Next-06: Float64
+  Next-09: Float64
+  Next-12: Float64
+  Next-15: Float64
+  NumBizDays_Month: Int64
+  NxtD-03: Float64
+  NxtD-06: Float64
+  NxtD-09: Float64
+  NxtD-12: Float64
+  NxtD-15: Float64
+  POrg05-03: Float64
+  POrg05-06: Float64
+  POrg05-09: Float64
+  POrg05-12: Float64
+  POrg05-15: Float64
+  POrg10-03: Float64
+  POrg10-06: Float64
+  POrg10-09: Float64
+  POrg10-12: Float64
+  POrg10-15: Float64
+  POrg15-03: Float64
+  POrg15-06: Float64
+  POrg15-09: Float64
+  POrg15-12: Float64
+  POrg15-15: Float64
+  POrg20-03: Float64
+  POrg20-06: Float64
+  POrg20-09: Float64
+  POrg20-12: Float64
+  POrg20-15: Float64
+  POrg25-03: Float64
+  POrg25-06: Float64
+  POrg25-09: Float64
+  POrg25-12: Float64
+  POrg25-15: Float64
+  POrg27-03: Float64
+  POrg27-06: Float64
+  POrg27-09: Float64
+  POrg27-12: Float64
+  POrg27-15: Float64
+  POrg28-03: Float64
+  POrg28-06: Float64
+  POrg28-09: Float64
+  POrg28-12: Float64
+  POrg28-15: Float64
+  Pens-06: Float64
+  Pens-12: Float64
+  Prev-03: Float64
+  Prev-06: Float64
+  Prev-09: Float64
+  Prev-12: Float64
+  Prev-15: Float64
+  PrvD-03: Float64
+  PrvD-06: Float64
+  PrvD-09: Float64
+  PrvD-12: Float64
+  PrvD-15: Float64
+  SameWkdM_1: Float64
+  SerNumBizInMonth: Int64
+  SerNum_Month: Int64
+  WkdN-03: Float64
+  WkdN-06: Float64
+  WkdN-09: Float64
+  WkdN-12: Float64
+  WkdN-15: Float64
+  dtAdjGotoDate_NextBizCase: Date
+  dtAdjGotoDate_PrevBizCase: Date
+  dtBaseDate: Date
+  dtBaseMonth: Date
+  dtBaseMonth_SameWeekday1st_NotLastM_1: Date
+  dtNextBizDate: Date
+  dtPrevBizDate: Date
+  dtPrevMonthEndBizDate: Date
+  intDay: Int64
+  intMonth: Int64
+  intShortYear: Int64 # e.g., 24 for the year 2024. May be ignored because there is also intYear.
+  intYear: Int64
+  sDAY-03: Float64
+  sDAY-06: Float64
+  sDAY-09: Float64
+  sDAY-12: Float64
+  sDAY-15: Float64
+  strDay: String
+  strDay_From05_NextBizOrOrg: String
+  strDay_From05_PrevBizOrOrg: String
+  strDay_From10_NextBizOrOrg: String
+  strDay_From10_PrevBizOrOrg: String
+  strDay_From15_NextBizOrOrg: String
+  strDay_From15_PrevBizOrOrg: String
+  strDay_From20_NextBizOrOrg: String
+  strDay_From20_PrevBizOrOrg: String
+  strDay_From25_NextBizOrOrg: String
+  strDay_From25_PrevBizOrOrg: String
+  strDay_From27_NextBizOrOrg: String
+  strDay_From28_NextBizOrOrg: String
+  strDay_From6812m9d_NextBizOrOrg: String
+  strDay_FromBonus_PrevBizOrOrg: String
+  strDay_FromFirstShort_Biz: String
+  strDay_FromFirst_Biz: String
+  strDay_FromLastShort_Biz: String
+  strDay_FromLast_Biz: String
+  strDay_FromPension_PrevBizOrOrg: String
+  strDay_From保険: String
+  strDay_From利払い: String
+  strDay_From国債大量償還: String
+  strDay_From年金定時払い: String
+  strDay_From普通交付税の交付: String
+  strDay_From法人税: String
+  strDay_From消費税: String
+  strDay_From源泉税: String
+  strDay_GotoFL_NextBizOrOrg: String
+  strDay_GotoFL_PrevBizOrOrg: String
+  strMonth: String
+  strWeekday: String
+  strWeekdayNum: String
+  strWeekday_Kanji: String # Need to remove this column because it is redundant with strWeekday
+  strWeekday_Month1st: String
+  str_IsBefore3PlusDayOff: Boolean
+  str_IsBizDate: Boolean
+  str_IsCalendarYearEndMonth: Boolean
+  str_IsCalendarYearStartMonth: Boolean
+  str_IsDay_27_NextBizOrOrg: Boolean
+  str_IsDay_28_NextBizOrOrg: Boolean
+  str_IsDay_6812m9d_NextBizOrOrg: Boolean
+  str_IsDay_Bonus_PrevBizOrOrg: Boolean
+  str_IsDay_Pension_PrevBizOrOrg: Boolean
+  str_IsDay_保険: Boolean
+  str_IsDay_利払い: Boolean
+  str_IsDay_国債大量償還: Boolean
+  str_IsDay_年金定時払い: Boolean
+  str_IsDay_普通交付税の交付: Boolean
+  str_IsDay_法人税: Boolean
+  str_IsDay_消費税: Boolean
+  str_IsDay_源泉税: Boolean
+  str_IsFirstBizDate: Boolean
+  str_IsFiscalHalfYearEndMonth: Boolean
+  str_IsFiscalHalfYearStartMonth: Boolean
+  str_IsFiscalYearEndMonth: Boolean
+  str_IsFiscalYearStartMonth: Boolean
+  str_IsGotoDay_Biz: Boolean
+  str_IsGotoDay_NextBiz: Boolean
+  str_IsGotoDay_PrevBiz: Boolean
+  str_IsHoliday: Boolean
+  str_IsLastBizDate: Boolean
+  str_IsQuaterEndMonth: Boolean
+  保険-03: Float64
+  保険-06: Float64
+  保険-09: Float64
+  保険-12: Float64
+  保険-15: Float64
+  利払い-03: Float64
+  利払い-06: Float64
+  利払い-09: Float64
+  利払い-12: Float64
+  利払い-15: Float64
+  国債大量-03: Float64
+  国債大量-06: Float64
+  国債大量-09: Float64
+  国債大量-12: Float64
+  国債大量-15: Float64
+  年金定時-06: Float64
+  年金定時-12: Float64
+  普通交付-03: Float64
+  普通交付-06: Float64
+  普通交付-09: Float64
+  普通交付-12: Float64
+  普通交付-15: Float64
+  法人税-03: Float64
+  法人税-06: Float64
+  法人税-09: Float64
+  法人税-12: Float64
+  法人税-15: Float64
+  消費税-03: Float64
+  消費税-06: Float64
+  消費税-09: Float64
+  消費税-12: Float64
+  消費税-15: Float64
+  源泉税-03: Float64
+  源泉税-06: Float64
+  源泉税-09: Float64
+  源泉税-12: Float64
+  源泉税-15: Float64
