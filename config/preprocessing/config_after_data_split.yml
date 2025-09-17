@@ -1,0 +1,7 @@
+name: preprocessing_after_data_split
+description: Data preprocessing steps after data split
+pipeline:
+  - name: DropColumns
+    kwargs:
+      columns:
+        - dtBaseDate

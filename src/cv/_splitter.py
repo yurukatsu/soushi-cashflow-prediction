@@ -1,4 +1,5 @@
 import datetime
+from typing import Any, Generator
 
 import numpy as np
 import pandas as pd
@@ -183,6 +184,23 @@ class SlidingWindowCV(BaseCrossValidator):
                 (dates >= np.datetime64(val_start)) & (dates <= np.datetime64(val_end))
             )[0]
             yield train_idx, val_idx
+
+    def split_dataframe(
+        self, df: pl.DataFrame
+    ) -> Generator[tuple[pl.DataFrame, pl.DataFrame], Any, None]:
+        """
+        Generate train/test (validation) splits as polars DataFrames based on sliding windows.
+        """
+        for train_start, train_end, val_start, val_end in self.windows:
+            train_df = df.filter(
+                (pl.col(self.date_col) >= pl.lit(train_start))
+                & (pl.col(self.date_col) <= pl.lit(train_end))
+            )
+            val_df = df.filter(
+                (pl.col(self.date_col) >= pl.lit(val_start))
+                & (pl.col(self.date_col) <= pl.lit(val_end))
+            )
+            yield train_df, val_df
 
     def get_n_splits(self, X=None, y=None, groups=None):
         return len(self.windows)

@@ -12,12 +12,12 @@ column_name:
   account_name: AccountName
 
 data_schema:
-  AccountCode: String
-  AccountName: String
+  AccountCode: Categorical
+  AccountName: Categorical
   AccumulationPeriodMonth: Date
   Bonu-06: Float64
   Bonu-12: Float64
-  DateType01: String
+  DateType01: Categorical
   Day_From05_NextBizOrOrg: Int64
   Day_From05_PrevBizOrOrg: Int64
   Day_From10_NextBizOrOrg: Int64
@@ -47,7 +47,7 @@ data_schema:
   Day_From源泉税: Int64
   Day_GotoFL_NextBizOrOrg: Int64
   Day_GotoFL_PrevBizOrOrg: Int64
-  FYear: String
+  FYear: Categorical
   First-03: Float64
   First-06: Float64
   First-09: Float64
@@ -59,26 +59,26 @@ data_schema:
   FirstSh-12: Float64
   FirstSh-15: Float64
   Flow: Float64
-  IsBefore3PlusDayOff: String # ['真', '偽']. Need to remove this column because it is redundant with str_IsBefore3PlusDayOff
-  IsBizDate: String # ['真', '偽']. Need to remove this column because it is redundant with str_IsBizDate
-  IsCalendarYearEndMonth: String # ['真', '偽']. Need to remove this column because it is redundant with str_IsCalendarYearEndMonth
-  IsCalendarYearStartMonth: String # ['真', '偽']. Need to remove this column because it is redundant with str_IsCalendarYearStartMonth
-  IsDay_27_NextBizOrOrg: String # ['真', '偽']. Need to remove this column because it is redundant with str_IsDay_27_NextBizOrOrg
-  IsDay_28_NextBizOrOrg: String # ['真', '偽']. Need to remove this column because it is redundant with str_IsDay_28_NextBizOrOrg
-  IsDay_6812m9d_NextBizOrOrg: String # ['真', '偽']. Need to remove this column because it is redundant with str_IsDay_6812m9d_NextBizOrOrg
-  IsDay_Bonus_PrevBizOrOrg: String # ['真', '偽']. Need to remove this column because it is redundant with str_IsDay_Bonus_PrevBizOrOrg
-  IsDay_Pension_PrevBizOrOrg: String # ['真', '偽']. Need to remove this column because it is redundant with str_IsDay_Pension_PrevBizOrOrg
-  IsFirstBizDate: String # ['真', '偽']. Need to remove this column because it is redundant with str_IsFirstBizDate
-  IsFiscalHalfYearEndMonth: String # ['真', '偽']. Need to remove this column because it is redundant with str_IsFiscalHalfYearEndMonth
-  IsFiscalHalfYearStartMonth: String # ['真', '偽']. Need to remove this column because it is redundant with str_IsFiscalHalfYearStartMonth
-  IsFiscalYearEndMonth: String # ['真', '偽']. Need to remove this column because it is redundant with str_IsFiscalYearEndMonth
-  IsFiscalYearStartMonth: String # ['真', '偽']. Need to remove this column because it is redundant with str_IsFiscalYearStartMonth
-  IsGotoDay_Biz: String # ['真', '偽']. Need to remove this column because it is redundant with str_IsGotoDay_Biz
-  IsGotoDay_NextBiz: String # ['真', '偽']. Need to remove this column because it is redundant with str_IsGotoDay_NextBiz
-  IsGotoDay_PrevBiz: String # ['真', '偽']. Need to remove this column because it is redundant with str_IsGotoDay_PrevBiz
-  IsHoliday: String # ['真', '偽']. Need to remove this column because it is redundant with str_IsHoliday
-  IsLastBizDate: String # ['真', '偽']. Need to remove this column because it is redundant with str_IsLastBizDate
-  IsQuaterEndMonth: String # ['真', '偽']. Need to remove this column because it is redundant with str_IsQuaterEndMonth
+  IsBefore3PlusDayOff: Categorical # ['真', '偽']. Need to remove this column because it is redundant with str_IsBefore3PlusDayOff
+  IsBizDate: Categorical # ['真', '偽']. Need to remove this column because it is redundant with str_IsBizDate
+  IsCalendarYearEndMonth: Categorical # ['真', '偽']. Need to remove this column because it is redundant with str_IsCalendarYearEndMonth
+  IsCalendarYearStartMonth: Categorical # ['真', '偽']. Need to remove this column because it is redundant with str_IsCalendarYearStartMonth
+  IsDay_27_NextBizOrOrg: Categorical # ['真', '偽']. Need to remove this column because it is redundant with str_IsDay_27_NextBizOrOrg
+  IsDay_28_NextBizOrOrg: Categorical # ['真', '偽']. Need to remove this column because it is redundant with str_IsDay_28_NextBizOrOrg
+  IsDay_6812m9d_NextBizOrOrg: Categorical # ['真', '偽']. Need to remove this column because it is redundant with str_IsDay_6812m9d_NextBizOrOrg
+  IsDay_Bonus_PrevBizOrOrg: Categorical # ['真', '偽']. Need to remove this column because it is redundant with str_IsDay_Bonus_PrevBizOrOrg
+  IsDay_Pension_PrevBizOrOrg: Categorical # ['真', '偽']. Need to remove this column because it is redundant with str_IsDay_Pension_PrevBizOrOrg
+  IsFirstBizDate: Categorical # ['真', '偽']. Need to remove this column because it is redundant with str_IsFirstBizDate
+  IsFiscalHalfYearEndMonth: Categorical # ['真', '偽']. Need to remove this column because it is redundant with str_IsFiscalHalfYearEndMonth
+  IsFiscalHalfYearStartMonth: Categorical # ['真', '偽']. Need to remove this column because it is redundant with str_IsFiscalHalfYearStartMonth
+  IsFiscalYearEndMonth: Categorical # ['真', '偽']. Need to remove this column because it is redundant with str_IsFiscalYearEndMonth
+  IsFiscalYearStartMonth: Categorical # ['真', '偽']. Need to remove this column because it is redundant with str_IsFiscalYearStartMonth
+  IsGotoDay_Biz: Categorical # ['真', '偽']. Need to remove this column because it is redundant with str_IsGotoDay_Biz
+  IsGotoDay_NextBiz: Categorical # ['真', '偽']. Need to remove this column because it is redundant with str_IsGotoDay_NextBiz
+  IsGotoDay_PrevBiz: Categorical # ['真', '偽']. Need to remove this column because it is redundant with str_IsGotoDay_PrevBiz
+  IsHoliday: Categorical # ['真', '偽']. Need to remove this column because it is redundant with str_IsHoliday
+  IsLastBizDate: Categorical # ['真', '偽']. Need to remove this column because it is redundant with str_IsLastBizDate
+  IsQuaterEndMonth: Categorical # ['真', '偽']. Need to remove this column because it is redundant with str_IsQuaterEndMonth
   JAD8-06: Float64
   JAD8-12: Float64
   Last-03: Float64
@@ -199,41 +199,41 @@ data_schema:
   sDAY-09: Float64
   sDAY-12: Float64
   sDAY-15: Float64
-  strDay: String
-  strDay_From05_NextBizOrOrg: String
-  strDay_From05_PrevBizOrOrg: String
-  strDay_From10_NextBizOrOrg: String
-  strDay_From10_PrevBizOrOrg: String
-  strDay_From15_NextBizOrOrg: String
-  strDay_From15_PrevBizOrOrg: String
-  strDay_From20_NextBizOrOrg: String
-  strDay_From20_PrevBizOrOrg: String
-  strDay_From25_NextBizOrOrg: String
-  strDay_From25_PrevBizOrOrg: String
-  strDay_From27_NextBizOrOrg: String
-  strDay_From28_NextBizOrOrg: String
-  strDay_From6812m9d_NextBizOrOrg: String
-  strDay_FromBonus_PrevBizOrOrg: String
-  strDay_FromFirstShort_Biz: String
-  strDay_FromFirst_Biz: String
-  strDay_FromLastShort_Biz: String
-  strDay_FromLast_Biz: String
-  strDay_FromPension_PrevBizOrOrg: String
-  strDay_From保険: String
-  strDay_From利払い: String
-  strDay_From国債大量償還: String
-  strDay_From年金定時払い: String
-  strDay_From普通交付税の交付: String
-  strDay_From法人税: String
-  strDay_From消費税: String
-  strDay_From源泉税: String
-  strDay_GotoFL_NextBizOrOrg: String
-  strDay_GotoFL_PrevBizOrOrg: String
-  strMonth: String
-  strWeekday: String
-  strWeekdayNum: String
-  strWeekday_Kanji: String # Need to remove this column because it is redundant with strWeekday
-  strWeekday_Month1st: String
+  strDay: Categorical
+  strDay_From05_NextBizOrOrg: Categorical
+  strDay_From05_PrevBizOrOrg: Categorical
+  strDay_From10_NextBizOrOrg: Categorical
+  strDay_From10_PrevBizOrOrg: Categorical
+  strDay_From15_NextBizOrOrg: Categorical
+  strDay_From15_PrevBizOrOrg: Categorical
+  strDay_From20_NextBizOrOrg: Categorical
+  strDay_From20_PrevBizOrOrg: Categorical
+  strDay_From25_NextBizOrOrg: Categorical
+  strDay_From25_PrevBizOrOrg: Categorical
+  strDay_From27_NextBizOrOrg: Categorical
+  strDay_From28_NextBizOrOrg: Categorical
+  strDay_From6812m9d_NextBizOrOrg: Categorical
+  strDay_FromBonus_PrevBizOrOrg: Categorical
+  strDay_FromFirstShort_Biz: Categorical
+  strDay_FromFirst_Biz: Categorical
+  strDay_FromLastShort_Biz: Categorical
+  strDay_FromLast_Biz: Categorical
+  strDay_FromPension_PrevBizOrOrg: Categorical
+  strDay_From保険: Categorical
+  strDay_From利払い: Categorical
+  strDay_From国債大量償還: Categorical
+  strDay_From年金定時払い: Categorical
+  strDay_From普通交付税の交付: Categorical
+  strDay_From法人税: Categorical
+  strDay_From消費税: Categorical
+  strDay_From源泉税: Categorical
+  strDay_GotoFL_NextBizOrOrg: Categorical
+  strDay_GotoFL_PrevBizOrOrg: Categorical
+  strMonth: Categorical
+  strWeekday: Categorical
+  strWeekdayNum: Categorical
+  strWeekday_Kanji: Categorical # Need to remove this column because it is redundant with strWeekday
+  strWeekday_Month1st: Categorical
   str_IsBefore3PlusDayOff: Boolean
   str_IsBizDate: Boolean
   str_IsCalendarYearEndMonth: Boolean

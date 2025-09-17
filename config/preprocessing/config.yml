@@ -1,5 +1,5 @@
 name: preprocessing
-description: Data Preprocessing Steps
+description: Data preprocessing steps
 pipeline:
   - name: DropColumns
     kwargs:
@@ -26,4 +26,18 @@ pipeline:
         - IsQuaterEndMonth
         - strWeekday_Kanji
         - intShortYear
+        - FYear
   - name: ConvertBooleanToInt
+  - name: ConvertDateToInt
+    kwargs:
+      parse: false
+      columns:
+        - dtBaseDate
+      replace_columns: false
+  - name: ConvertDateToInt
+    kwargs:
+      parse: true
+      exclude_columns:
+        - dtBaseDate
+      replace_columns: true
+  - name: ImputeCategoryMissingValues

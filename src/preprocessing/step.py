@@ -27,10 +27,12 @@ class BaseConvertDataType(BasePreprocessingStep):
         *,
         parse: bool = True,
         columns: list[str] = None,
+        exclude_columns: list[str] = None,
         new_column_suffix: str = "int",
         replace_columns: bool = True,
     ):
         self.columns = columns or []
+        self.exclude_columns = exclude_columns or []
         self.parse = parse
         self.new_column_suffix = new_column_suffix
         self.replace_columns = replace_columns
@@ -38,8 +40,12 @@ class BaseConvertDataType(BasePreprocessingStep):
     def run(self, df: pl.DataFrame) -> pl.DataFrame:
         _columns = self._parse(df) if self.parse else self.columns.copy()
 
-        existing_cols = [col for col in _columns if col in df.columns]
-        if not existing_cols:
+        existing_cols = [
+            col
+            for col in _columns
+            if col in df.columns and col not in self.exclude_columns
+        ]
+        if len(existing_cols) == 0:
             return df
 
         if self.replace_columns:
@@ -83,9 +89,45 @@ class ConvertDatetimeToInt(BaseConvertDataType):
     target_dtype: pl.DataType = pl.Int64
 
 
+class ImputeCategoryMissingValues(BasePreprocessingStep):
+    name: str = "ImputeCategoryMissingValues"
+    description: str = "Impute missing values in categorical columns"
+
+    def __init__(
+        self,
+        *,
+        fill_value: str = "missing",
+        parse: bool = True,
+        columns: list[str] = None,
+        exclude_columns: list[str] = None,
+    ):
+        self.fill_value = fill_value
+        self.columns = columns or []
+        self.exclude_columns = exclude_columns or []
+        self.parse = parse
+
+    def run(self, df: pl.DataFrame) -> pl.DataFrame:
+        if self.parse:
+            self.columns = df.select(pl.col(pl.Categorical)).columns
+
+        exprs = []
+        for col in self.columns:
+            if col not in df.columns:
+                continue
+            if col in self.exclude_columns:
+                continue
+            exprs.append(pl.col(col).fill_null(self.fill_value))
+
+        if len(exprs) == 0:
+            return df
+
+        return df.with_columns(exprs)
+
+
 PREPROCESSING_STEP_REGISTRY: dict[str, type[BasePreprocessingStep]] = {
     "DropColumns": DropColumns,
     "ConvertBooleanToInt": ConvertBooleanToInt,
     "ConvertDateToInt": ConvertDateToInt,
     "ConvertDatetimeToInt": ConvertDatetimeToInt,
+    "ImputeCategoryMissingValues": ImputeCategoryMissingValues,
 }

@@ -1,8 +1,12 @@
+import logging
+
 import polars as pl
 
 from ..config.preprocessing import PreprocessingConfig, PreprocessingStepConfig
 from .base import BasePreprocessingStep
 from .step import PREPROCESSING_STEP_REGISTRY
+
+logger = logging.getLogger(__name__)
 
 
 class PreprocessingPipeline:
@@ -11,6 +15,7 @@ class PreprocessingPipeline:
 
     def run(self, df: pl.DataFrame) -> pl.DataFrame:
         for step in self.steps:
+            logger.info(f"Applying step: {step.name} - {step.description}")
             df = step.run(df)
         return df
 
