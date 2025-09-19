@@ -2,7 +2,6 @@ from typing import Optional
 
 from pydantic import Field
 
-from ._utils import load_yaml
 from .base import BaseConfig
 
 

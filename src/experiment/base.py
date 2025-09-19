@@ -1,11 +1,9 @@
 import datetime
 import logging
 from contextlib import contextmanager
-from os import name
 
 import colorlog
 import mlflow
-import optuna
 import polars as pl
 
 from src.config import (
