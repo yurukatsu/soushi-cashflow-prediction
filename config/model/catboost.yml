@@ -1,0 +1,12 @@
+name: CatBoostModel
+description: Experiment configuration for CatBoost model
+
+model_name: CatBoostModel
+model_params:
+  iterations: 1000
+  learning_rate: 0.2
+  depth: 6
+
+fit_params:
+  verbose: 0
+  early_stopping_rounds: 50

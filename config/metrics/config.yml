@@ -1,0 +1,36 @@
+name: Metrics
+description: Configuration for evaluation metrics
+
+metrics:
+  - name: "mse"
+    key: "mse"
+  - name: "rmse"
+    key: "rmse"
+  - name: "rmse_w_penalty_2"
+    key: "rmse_w_penalty"
+    params:
+      penalty: 2.0
+  - name: "rmse_w_penalty_1"
+    key: "rmse_w_penalty"
+    params:
+      penalty: 1.0
+  - name: "mae"
+    key: "mae"
+  - name: "mape"
+    key: "mape"
+  - name: "smape"
+    key: "smape"
+  - name: "sign_accuracy"
+    key: "sign_accuracy"
+  - name: "sign_recall"
+    key: "sign_recall"
+  - name: "sign_precision"
+    key: "sign_precision"
+  - name: "sign_f1_score"
+    key: "sign_f1_score"
+  - name: "r2"
+    key: "r2"
+  - name: "pinball"
+    key: "pinball"
+    params:
+      alpha: 0.5
