@@ -16,7 +16,7 @@ from src.config import (
 )
 from src.cv import SlidingWindowCV
 from src.ingestion import DataLoader
-from src.model import ModelMap
+from src.model import ModelMap, BaseModel
 from src.model.metrics import METRIC_MAP
 from src.preprocessing import PreprocessingPipeline
 
@@ -152,6 +152,96 @@ class Experiment:
         mlflow.log_dict(self.model_config.model_dump(), "config/model_config.json")
         mlflow.log_dict(self.metrics_config.model_dump(), "config/metrics_config.json")
 
+    def _run_in_fold(
+        self,
+        fold: int,
+        train: pl.DataFrame,
+        val: pl.DataFrame,
+        test: pl.DataFrame,
+    )  -> BaseModel:
+        self._create_run_name(suffix=f"fold{fold}")
+        self._log_config()
+
+        with self._task_status_message("prepare data"):
+            mlflow.log_input(
+                mlflow.data.polars_dataset.from_polars(
+                    train,
+                    targets=self.dataset_config.column_name.target,
+                    name=f"{self.dataset_config.name}--{self.preprocessing_config.name}--{self.cv_config.name}--fold{fold}--train",
+                ),
+            )
+            mlflow.log_input(
+                mlflow.data.polars_dataset.from_polars(
+                    val,
+                    targets=self.dataset_config.column_name.target,
+                    name=f"{self.dataset_config.name}--{self.preprocessing_config.name}--{self.cv_config.name}--fold{fold}--val",
+                )
+            )
+            mlflow.log_input(
+                mlflow.data.polars_dataset.from_polars(
+                    test,
+                    targets=self.dataset_config.column_name.target,
+                    name=f"{self.dataset_config.name}--{self.preprocessing_config.name}--test",
+                )
+            )
+            X_train = train.drop(self.dataset_config.column_name.target)
+            y_train = train.select(self.dataset_config.column_name.target)
+            X_val = val.drop(self.dataset_config.column_name.target)
+            y_val = val.select(self.dataset_config.column_name.target)
+            X_test = test.drop(self.dataset_config.column_name.target)
+            y_test = test.select(self.dataset_config.column_name.target)
+
+        with self._task_status_message("instantiate model"):
+            with self._task_status_message("create preprocessing pipeline"):
+                preprocessor = PreprocessingPipeline.from_config(
+                    self.preprocessing_config_after_data_split
+                )
+            model = self.model_cls(
+                preprocessor=preprocessor,
+                model_params=self.model_config.model_params,
+            )
+            mlflow.log_params(model.get_params() or {})
+
+        with self._task_status_message("fit model"):
+            model.fit(X_train, y_train, **self.model_config.fit_params)
+
+        with self._task_status_message("predict and evaluate"):
+            with self._task_status_message("predict train"):
+                y_train_pred = model.predict(
+                    X_train, **self.model_config.predict_params
+                )
+            with self._task_status_message("evaluate train metrics"):
+                train_metrics = self._calculate_metrics(
+                    y_train, y_train_pred, prefix="train_"
+                )
+                mlflow.log_metrics(train_metrics)
+            with self._task_status_message("predict validation"):
+                y_val_pred = model.predict(X_val, **self.model_config.predict_params)
+            with self._task_status_message("evaluate metrics"):
+                val_metrics = self._calculate_metrics(y_val, y_val_pred, prefix="val_")
+                mlflow.log_metrics(val_metrics)
+            with self._task_status_message("predict test"):
+                y_test_pred = model.predict(
+                    X_test,
+                    **self.model_config.predict_params,
+                )
+            with self._task_status_message("evaluate test metrics"):
+                test_metrics = self._calculate_metrics(
+                    y_test, y_test_pred, prefix="test_"
+                )
+                mlflow.log_metrics(test_metrics)
+
+        with self._task_status_message("log feature importance"):
+            fi = model.get_feature_importance()
+            fi.log_to_mlflow(
+                artifact_paths={
+                    "html": "output",
+                    "csv": "output",
+                }
+            )
+        
+        return model
+
     def run(self):
         with self._task_status_message("create dataloader"):
             dataloader = DataLoader(config=self.dataset_config)
@@ -167,9 +257,7 @@ class Experiment:
 
         with self._task_status_message("run preprocessing pipeline (train and test)"):
             train_df = preprocessor.run(train_df)
-            test_df = preprocessor.run(test_df)
-            X_test = test_df.drop(self.dataset_config.column_name.target)
-            y_test = test_df.select(self.dataset_config.column_name.target)
+            test = preprocessor.run(test_df)
 
         with self._task_status_message("create cross-validation splits"):
             cv = SlidingWindowCV(
@@ -184,54 +272,9 @@ class Experiment:
                 step_duration=self.cv_config.step_duration,
             )
 
-        with self._task_status_message("data create preprocessor after data split"):
-            preprocessor_after_data_split = PreprocessingPipeline.from_config(
-                self.preprocessing_config_after_data_split
-            )
-
         fold = 0
+        models = []
         for train, val in cv.split_dataframe(train_df):
-            X_train = train.drop(self.dataset_config.column_name.target)
-            y_train = train.select(self.dataset_config.column_name.target)
-            X_val = val.drop(self.dataset_config.column_name.target)
-            y_val = val.select(self.dataset_config.column_name.target)
-
-            with self._task_status_message("Instantiate model"):
-                model = self.model_cls(
-                    preprocessor=preprocessor_after_data_split,
-                    model_params=self.model_config.model_params,
-                )
-
-            with self._task_status_message("fit model"):
-                model.fit(X_train, y_train, **self.model_config.fit_params)
-
-            with self._task_status_message("predict train"):
-                y_train_pred = model.predict(
-                    X_train, **self.model_config.predict_params
-                )
-            with self._task_status_message("evaluate train metrics"):
-                train_metrics = self._calculate_metrics(
-                    y_train, y_train_pred, prefix="train_"
-                )
-                self.logger.info(f"Train metrics: {train_metrics}")
-
-            with self._task_status_message("predict validation"):
-                y_val_pred = model.predict(X_val, **self.model_config.predict_params)
-            with self._task_status_message("evaluate metrics"):
-                val_metrics = self._calculate_metrics(y_val, y_val_pred, prefix="val_")
-                self.logger.info(f"Validation metrics: {val_metrics}")
-
-            with self._task_status_message("predict test"):
-                y_test_pred = model.predict(
-                    X_test,
-                    **self.model_config.predict_params,
-                )
-            with self._task_status_message("evaluate test metrics"):
-                test_metrics = self._calculate_metrics(
-                    y_test, y_test_pred, prefix="test_"
-                )
-                self.logger.info(f"Test metrics: {test_metrics}")
-
             with mlflow.start_run(
                 run_name=self._create_run_name(suffix=f"fold{fold}"),
                 tags={
@@ -244,37 +287,6 @@ class Experiment:
                     "fold": str(fold),
                 },
             ):
-                self._log_config()
-
-                mlflow.log_params(model.get_params() or {})
-                mlflow.log_metrics(train_metrics)
-                mlflow.log_metrics(val_metrics)
-                mlflow.log_metrics(test_metrics)
-                mlflow.log_input(
-                    mlflow.data.polars_dataset.from_polars(
-                        train,
-                        targets="Flow",
-                        name=f"{self.dataset_config.name}--{self.preprocessing_config.name}--{self.cv_config.name}--fold{fold}--train",
-                    ),
-                )
-                mlflow.log_input(
-                    mlflow.data.polars_dataset.from_polars(
-                        val,
-                        targets="Flow",
-                        name=f"{self.dataset_config.name}--{self.preprocessing_config.name}--{self.cv_config.name}--fold{fold}--val",
-                    )
-                )
-                mlflow.log_input(
-                    mlflow.data.polars_dataset.from_polars(
-                        test_df,
-                        targets="Flow",
-                        name=f"{self.dataset_config.name}--{self.preprocessing_config.name}--test",
-                    )
-                )
-
-                fi = model.get_feature_importance()
-                fi.log_to_mlflow(
-                    artifact_paths={"html": "output/feature_importance.html", "csv": "output/feature_importance.csv"}
-                )
-
-            fold += 1
+                model = self._run_in_fold(fold, train, val, test)
+                models.append(model)
+                fold += 1
