@@ -1,9 +1,11 @@
 import datetime
 import logging
+import tempfile
 from contextlib import contextmanager
 
 import colorlog
 import mlflow
+import numpy as np
 import polars as pl
 
 from src.config import (
@@ -16,7 +18,7 @@ from src.config import (
 )
 from src.cv import SlidingWindowCV
 from src.ingestion import DataLoader
-from src.model import ModelMap, BaseModel
+from src.model import BaseModel, ModelMap
 from src.model.metrics import METRIC_MAP
 from src.preprocessing import PreprocessingPipeline
 
@@ -152,13 +154,39 @@ class Experiment:
         mlflow.log_dict(self.model_config.model_dump(), "config/model_config.json")
         mlflow.log_dict(self.metrics_config.model_dump(), "config/metrics_config.json")
 
+    def _create_output_dataframe(
+        self, df: pl.DataFrame, pred: pl.DataFrame
+    ) -> pl.DataFrame:
+        return pl.concat(
+            [
+                df.select(
+                    [
+                        self.dataset_config.column_name.date,
+                        self.dataset_config.column_name.account_id,
+                        self.dataset_config.column_name.account_name,
+                        self.dataset_config.column_name.target,
+                    ]
+                ),
+                pred,
+            ],
+            how="horizontal",
+        )
+
+    def _log_output_data(
+        self, df: pl.DataFrame, name: str, artifact_path: str = "output"
+    ):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            path = f"{temp_dir}/{name}.csv"
+            df.write_csv(path)
+            mlflow.log_artifact(path, artifact_path=artifact_path)
+
     def _run_in_fold(
         self,
         fold: int,
         train: pl.DataFrame,
         val: pl.DataFrame,
         test: pl.DataFrame,
-    )  -> BaseModel:
+    ) -> BaseModel:
         self._create_run_name(suffix=f"fold{fold}")
         self._log_config()
 
@@ -239,7 +267,16 @@ class Experiment:
                     "csv": "output",
                 }
             )
-        
+
+        with self._task_status_message("log output data"):
+            output_train = self._create_output_dataframe(train, y_train_pred)
+            output_val = self._create_output_dataframe(val, y_val_pred)
+            output_test = self._create_output_dataframe(test, y_test_pred)
+
+            self._log_output_data(output_train, name="train", artifact_path="output")
+            self._log_output_data(output_val, name="val", artifact_path="output")
+            self._log_output_data(output_test, name="test", artifact_path="output")
+
         return model
 
     def run(self):
@@ -290,3 +327,56 @@ class Experiment:
                 model = self._run_in_fold(fold, train, val, test)
                 models.append(model)
                 fold += 1
+
+        with mlflow.start_run(
+            run_name=self._create_run_name(suffix="ensemble"),
+            tags={
+                "dataset": self.dataset_config.name,
+                "preprocessing": self.preprocessing_config.name,
+                "cv": self.cv_config.name,
+                "preprocessing_after_data_split": self.preprocessing_config_after_data_split.name,
+                "model": self.model_config.name,
+                "model_name": self.model_config.model_name,
+                "fold": "ensemble",
+            },
+        ):
+            self._log_config()
+
+            with self._task_status_message("load test data"):
+                X_test = test.drop(self.dataset_config.column_name.target)
+                mlflow.log_input(
+                    mlflow.data.polars_dataset.from_polars(
+                        test,
+                        targets=self.dataset_config.column_name.target,
+                        name=f"{self.dataset_config.name}--{self.preprocessing_config.name}--test",
+                    )
+                )
+
+            with self._task_status_message("predict test with ensemble"):
+                preds = []
+
+                for model in models:
+                    y_test_pred = model.predict(
+                        X_test,
+                        **self.model_config.predict_params,
+                    )
+                    preds.append(y_test_pred.to_numpy())
+
+                y_test = test.select(self.dataset_config.column_name.target)
+                y_test_pred_ensemble = pl.DataFrame(
+                    {
+                        "prediction": np.mean(preds, axis=0).squeeze(),
+                    }
+                )
+
+            with self._task_status_message("evaluate ensemble test metrics"):
+                test_metrics = self._calculate_metrics(
+                    y_test,
+                    y_test_pred_ensemble,
+                    prefix="test_",
+                )
+                mlflow.log_metrics(test_metrics)
+
+            with self._task_status_message("log output data"):
+                output_test = self._create_output_dataframe(test, y_test_pred_ensemble)
+                self._log_output_data(output_test, name="test", artifact_path="output")
