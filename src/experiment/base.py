@@ -209,7 +209,6 @@ class Experiment:
                 y_train_pred = model.predict(
                     X_train, **self.model_config.predict_params
                 )
-
             with self._task_status_message("evaluate train metrics"):
                 train_metrics = self._calculate_metrics(
                     y_train, y_train_pred, prefix="train_"
@@ -218,7 +217,6 @@ class Experiment:
 
             with self._task_status_message("predict validation"):
                 y_val_pred = model.predict(X_val, **self.model_config.predict_params)
-
             with self._task_status_message("evaluate metrics"):
                 val_metrics = self._calculate_metrics(y_val, y_val_pred, prefix="val_")
                 self.logger.info(f"Validation metrics: {val_metrics}")
@@ -228,7 +226,6 @@ class Experiment:
                     X_test,
                     **self.model_config.predict_params,
                 )
-
             with self._task_status_message("evaluate test metrics"):
                 test_metrics = self._calculate_metrics(
                     y_test, y_test_pred, prefix="test_"
@@ -253,7 +250,6 @@ class Experiment:
                 mlflow.log_metrics(train_metrics)
                 mlflow.log_metrics(val_metrics)
                 mlflow.log_metrics(test_metrics)
-                self.logger.info(f"{type(train_df)}")
                 mlflow.log_input(
                     mlflow.data.polars_dataset.from_polars(
                         train,
@@ -274,6 +270,11 @@ class Experiment:
                         targets="Flow",
                         name=f"{self.dataset_config.name}--{self.preprocessing_config.name}--test",
                     )
+                )
+
+                fi = model.get_feature_importance()
+                fi.log_to_mlflow(
+                    artifact_paths={"html": "output/feature_importance.html", "csv": "output/feature_importance.csv"}
                 )
 
             fold += 1

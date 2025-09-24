@@ -7,6 +7,8 @@ from sklearn.preprocessing import OneHotEncoder
 from src.preprocessing import PreprocessingPipeline
 from src.typing import AnyDict
 
+from ._output import FeatureImportance
+
 
 class BaseModel(ABC):
     estimator = None  # To be defined in subclasses
@@ -40,6 +42,10 @@ class BaseModel(ABC):
 
     def get_params(self) -> AnyDict:
         return self.model.get_params()
+
+    def get_feature_importance(self) -> FeatureImportance:
+        df = pl.DataFrame({"feature": [], "importance": []})
+        return FeatureImportance(df)
 
 
 class BaseModelWithOneHotEncoding(BaseModel):
