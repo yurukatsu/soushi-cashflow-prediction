@@ -10,7 +10,7 @@ import polars as pl
 
 from src.config import (
     BaseConfig,
-    CVCrossValidationConfig,
+    CrossValidationConfig,
     DatasetConfig,
     MetricsConfig,
     ModelConfig,
@@ -31,7 +31,7 @@ class Experiment:
         base_run_name: str | None = None,
         dataset_config: DatasetConfig | None = None,
         preprocessing_config: PreprocessingConfig | None = None,
-        cv_config: CVCrossValidationConfig | None = None,
+        cv_config: CrossValidationConfig | None = None,
         preprocessing_config_after_data_split: PreprocessingConfig | None = None,
         model_config: ModelConfig | None = None,
         metrics_config: MetricsConfig | None = None,
@@ -63,10 +63,10 @@ class Experiment:
             )
 
         with self._task_status_message("load cv config"):
-            self.cv_config: CVCrossValidationConfig = self._get_config(
+            self.cv_config: CrossValidationConfig = self._get_config(
                 config=cv_config,
                 config_path=cv_config_path,
-                base_cls=CVCrossValidationConfig,
+                base_cls=CrossValidationConfig,
             )
 
         with self._task_status_message("load preprocessing config after data split"):
@@ -187,7 +187,6 @@ class Experiment:
         val: pl.DataFrame,
         test: pl.DataFrame,
     ) -> BaseModel:
-        self._create_run_name(suffix=f"fold{fold}")
         self._log_config()
 
         with self._task_status_message("prepare data"):

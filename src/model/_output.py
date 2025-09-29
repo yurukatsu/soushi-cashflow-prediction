@@ -45,7 +45,6 @@ class FeatureImportance:
     def log_to_mlflow(
         self, artifact_paths: dict[str | None, str | None] = {"html": None, "csv": None}
     ):
-        temp_dir = tempfile.TemporaryDirectory()
         with tempfile.TemporaryDirectory() as temp_dir:
             fig = self.get_figure()
             html_path = f"{temp_dir}/feature_importance.html"

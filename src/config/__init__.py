@@ -1,5 +1,5 @@
 from .base import BaseConfig
-from .cv import CVCrossValidationConfig
+from .cv import CrossValidationConfig
 from .dataset import DatasetConfig
 from .metrics import MetricsConfig
 from .model import ModelConfig
@@ -10,6 +10,6 @@ __all__ = [
     "DatasetConfig",
     "PreprocessingConfig",
     "MetricsConfig",
-    "CVCrossValidationConfig",
+    "CrossValidationConfig",
     "ModelConfig",
 ]

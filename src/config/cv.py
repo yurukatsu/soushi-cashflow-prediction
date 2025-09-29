@@ -5,7 +5,7 @@ from pydantic import Field
 from .base import BaseConfig
 
 
-class CVCrossValidationConfig(BaseConfig):
+class CrossValidationConfig(BaseConfig):
     """
     Configuration for cross-validation.
 
