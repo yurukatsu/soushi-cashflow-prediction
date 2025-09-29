@@ -175,7 +175,17 @@ def main(
 
 
 if __name__ == "__main__":
-    mlflow.set_tracking_uri("http://localhost:15000")
-    experiment_name = "soushi-cashflow-prediction-test"
+    import logging
+    import os
+
+    from dotenv import load_dotenv
+
+    load_dotenv(override=True)
+
+    logging.basicConfig(level=logging.INFO)
+
+    mlflow.set_tracking_uri(os.getenv("MLFLOW_TRACKING_URI", "http://localhost:5000"))
+    experiment_name = os.getenv("MLFLOW_EXPERIMENT_NAME", "default")
     mlflow.set_experiment(experiment_name)
+
     main()

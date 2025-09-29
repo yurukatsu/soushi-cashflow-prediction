@@ -1,13 +1,17 @@
 import logging
+import os
 
 import mlflow
+from dotenv import load_dotenv
 
 from src.experiment import Experiment
 
+load_dotenv(override=True)
+
 logging.basicConfig(level=logging.INFO)
 
-mlflow.set_tracking_uri("http://localhost:15000")
-experiment_name = "soushi-cashflow-prediction-test"
+mlflow.set_tracking_uri(os.getenv("MLFLOW_TRACKING_URI", "http://localhost:5000"))
+experiment_name = os.getenv("MLFLOW_EXPERIMENT_NAME", "default")
 mlflow.set_experiment(experiment_name)
 
 experiment = Experiment(
